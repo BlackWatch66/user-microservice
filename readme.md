@@ -58,6 +58,63 @@ curl http://localhost:8080/api/users/login -X POST -d '{"email":"test@example.co
 # The test result should return a JSON response containing a token
 ```
 
+### Docker Compose Configuration Guide
+
+The project uses Docker Compose to manage all required services. Here's a detailed breakdown:
+
+1. **Environment Variables**: Create or modify the `.env` file in the project root with the following variables:
+
+```
+# Database configuration
+MYSQL_ROOT_PASSWORD=password
+MYSQL_DATABASE=user_db
+MYSQL_PORT=3306
+
+# Redis configuration
+REDIS_PORT=6379
+REDIS_PASSWORD=
+
+# User service configuration
+HTTP_PORT=8080
+GRPC_PORT=50051
+JWT_SECRET=your-jwt-secret-key
+JWT_EXPIRY_MINUTES=15
+```
+
+2. **Docker Compose Commands**:
+
+   - **Start services**: `docker-compose up -d`
+   - **Stop services**: `docker-compose down`
+   - **View logs**: `docker-compose logs -f user-service`
+   - **Rebuild services**: `docker-compose build`
+   - **Restart a specific service**: `docker-compose restart user-service`
+
+3. **Service Endpoints**:
+
+   - **HTTP API**: `http://localhost:8080`
+   - **gRPC API**: `localhost:50051`
+   - **MySQL**: `localhost:3306`
+   - **Redis**: `localhost:6379`
+
+4. **Volume Management**:
+
+   The Docker Compose setup creates persistent volumes for MySQL and Redis data:
+   - `mysql-data`: Stores database files
+   - `redis-data`: Stores Redis data
+
+   To remove volumes when stopping services:
+   ```bash
+   docker-compose down -v
+   ```
+
+5. **Scaling**:
+
+   To run multiple instances of the user service:
+   ```bash
+   docker-compose up -d --scale user-service=3
+   ```
+   (Note: This requires additional load balancer configuration)
+
 ## API Documentation
 
 ### HTTP REST API
