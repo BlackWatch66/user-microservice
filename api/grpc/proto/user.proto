@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "./;proto"; // 修改为相对路径
+
+// User 服务定义
+service UserService {
+  // 创建用户
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  // 验证 Token
+  rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+// 创建用户请求
+message CreateUserRequest {
+  string email = 1;
+  string password = 2; // 客户端应发送原始密码
+}
+
+// 创建用户响应
+message CreateUserResponse {
+  uint64 user_id = 1;
+  string email = 2;
+}
+
+// 验证 Token 请求
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+// 验证 Token 响应
+message ValidateTokenResponse {
+  bool valid = 1;
+  uint64 user_id = 2; // 如果有效，返回用户 ID
+  string email = 3;   // 如果有效，返回用户 Email
+} 
